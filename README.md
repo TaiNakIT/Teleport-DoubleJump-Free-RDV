@@ -208,13 +208,11 @@ StarterPlayerScripts
   * Thời gian cooldown
   * Lực nhảy double jump
 
----
-
 * Chỉ dùng 1 phiên bản cho mỗi skill.
 * Ví dụ setup phổ biến:
-* StarterPlayerScripts
- ├ Teleport_Advanced
- └ DoubleJump_Advanced
+StarterPlayerScripts
+├ Teleport_Advanced
+└ DoubleJump_Advanced
 
 # Mục đích project
 
