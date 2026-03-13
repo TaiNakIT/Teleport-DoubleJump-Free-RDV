@@ -141,7 +141,25 @@ Phù hợp cho:
 * Game PvP
 
 ---
+📁 Chuẩn bị (quan trọng)
 
+Nếu muốn dùng Attachment VFX riêng, hãy tạo cấu trúc:
+
+ReplicatedStorage
+ └ VFX
+     └ TeleportEffect (Attachment)
+     └ DoubleJumpEffect (Attachment)
+
+Trong Attachment bạn có thể đặt:
+
+* ParticleEmitter
+* Beam
+* Trail
+* Light
+* Sound
+
+**Script sẽ clone Attachment này vào HumanoidRootPart.**
+---
 # Cách cài đặt
 
 ## Bước 1
