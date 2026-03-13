@@ -1,27 +1,98 @@
 local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local player = Players.LocalPlayer
 local mouse = player:GetMouse()
 
--- ===== THÔNG SỐ CÓ THỂ CHỈNH =====
-local teleportKey = Enum.KeyCode.T -- đổi phím teleport
-local heightOffset = 3 -- độ cao sau khi teleport
--- =================================
+--============================--
+--        CONFIG               --
+--============================--
 
-UserInputService.InputBegan:Connect(function(input, processed)
-	if processed then return end
-	
-	if input.KeyCode == teleportKey then
+local TELEPORT_KEY = Enum.KeyCode.T -- phím teleport
+local HEIGHT_OFFSET = 3 -- độ cao sau teleport
+
+-- Animation
+local USE_ANIMATION = true
+local ANIMATION_ID = "rbxassetid://0"
+
+-- Particle mode
+local USE_CUSTOM_ATTACHMENT = false 
+-- true = dùng attachment do creator tạo
+-- false = script tự tạo particle
+
+local ATTACHMENT_NAME = "TeleportEffect" 
+-- tên attachment trong ReplicatedStorage.VFX
+
+-- Script particle config
+local PARTICLE_TEXTURE = "rbxassetid://0"
+local PARTICLE_LIFETIME = 0.5
+
+--============================--
+
+local function playVFX(root)
+
+	if USE_CUSTOM_ATTACHMENT then
 		
+		local vfxFolder = ReplicatedStorage:WaitForChild("VFX")
+		local template = vfxFolder:FindFirstChild(ATTACHMENT_NAME)
+
+		if template then
+			
+			local clone = template:Clone()
+			clone.Parent = root
+			
+			game.Debris:AddItem(clone,2)
+
+		end
+		
+	else
+		
+		local particle = Instance.new("ParticleEmitter")
+
+		particle.Texture = PARTICLE_TEXTURE
+		particle.Rate = 200
+		particle.Lifetime = NumberRange.new(PARTICLE_LIFETIME)
+		particle.Speed = NumberRange.new(5)
+
+		particle.Parent = root
+
+		game.Debris:AddItem(particle,1)
+
+	end
+
+end
+
+UserInputService.InputBegan:Connect(function(input,processed)
+
+	if processed then return end
+
+	if input.KeyCode == TELEPORT_KEY then
+
 		local character = player.Character
 		if not character then return end
-		
+
 		local root = character:FindFirstChild("HumanoidRootPart")
-		if not root then return end
-		
-		local targetPosition = mouse.Hit.Position
-		
-		root.CFrame = CFrame.new(targetPosition + Vector3.new(0,heightOffset,0))
+		local humanoid = character:FindFirstChildOfClass("Humanoid")
+
+		if not root or not humanoid then return end
+
+		local target = mouse.Hit.Position
+
+		if USE_ANIMATION then
+
+			local anim = Instance.new("Animation")
+			anim.AnimationId = ANIMATION_ID
+
+			local track = humanoid:LoadAnimation(anim)
+			track:Play()
+
+		end
+
+		playVFX(root)
+
+		root.CFrame = CFrame.new(target + Vector3.new(0,HEIGHT_OFFSET,0))
+
 	end
+
 end)
