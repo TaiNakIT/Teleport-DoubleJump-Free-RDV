@@ -1,45 +1,105 @@
 local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local player = Players.LocalPlayer
 local mouse = player:GetMouse()
 
--- ===== THÔNG SỐ CÓ THỂ CHỈNH =====
-local teleportKey = Enum.KeyCode.T -- phím teleport
-local maxDistance = 120 -- khoảng cách teleport tối đa
-local cooldownTime = 2 -- thời gian cooldown
-local heightOffset = 3 -- độ cao sau teleport
--- =================================
+--============================--
+--        CONFIG               --
+--============================--
+
+local TELEPORT_KEY = Enum.KeyCode.T
+
+local MAX_DISTANCE = 120 -- khoảng cách tối đa
+local COOLDOWN = 2 -- thời gian cooldown
+local HEIGHT_OFFSET = 3
+
+local USE_ANIMATION = true
+local ANIMATION_ID = "rbxassetid://0"
+
+local USE_CUSTOM_ATTACHMENT = true
+local ATTACHMENT_NAME = "TeleportEffect"
+
+local PARTICLE_TEXTURE = "rbxassetid://0"
+
+--============================--
 
 local cooldown = false
 
-UserInputService.InputBegan:Connect(function(input, processed)
+local function playVFX(root)
+
+	if USE_CUSTOM_ATTACHMENT then
+
+		local template = ReplicatedStorage.VFX:FindFirstChild(ATTACHMENT_NAME)
+
+		if template then
+
+			local clone = template:Clone()
+			clone.Parent = root
+
+			game.Debris:AddItem(clone,2)
+
+		end
+
+	else
+
+		local particle = Instance.new("ParticleEmitter")
+
+		particle.Texture = PARTICLE_TEXTURE
+		particle.Rate = 200
+		particle.Lifetime = NumberRange.new(0.5)
+
+		particle.Parent = root
+
+		game.Debris:AddItem(particle,1)
+
+	end
+
+end
+
+UserInputService.InputBegan:Connect(function(input,processed)
+
 	if processed then return end
 	if cooldown then return end
-	
-	if input.KeyCode == teleportKey then
-		
+
+	if input.KeyCode == TELEPORT_KEY then
+
 		local character = player.Character
 		if not character then return end
-		
+
 		local root = character:FindFirstChild("HumanoidRootPart")
-		if not root then return end
-		
-		local targetPosition = mouse.Hit.Position
-		
-		local distance = (targetPosition - root.Position).Magnitude
-		
-		if distance <= maxDistance then
-			
+		local humanoid = character:FindFirstChildOfClass("Humanoid")
+
+		if not root or not humanoid then return end
+
+		local target = mouse.Hit.Position
+		local distance = (target - root.Position).Magnitude
+
+		if distance <= MAX_DISTANCE then
+
 			cooldown = true
-			
-			root.CFrame = CFrame.new(targetPosition + Vector3.new(0,heightOffset,0))
-			
-			task.wait(cooldownTime)
-			
+
+			if USE_ANIMATION then
+
+				local anim = Instance.new("Animation")
+				anim.AnimationId = ANIMATION_ID
+
+				local track = humanoid:LoadAnimation(anim)
+				track:Play()
+
+			end
+
+			playVFX(root)
+
+			root.CFrame = CFrame.new(target + Vector3.new(0,HEIGHT_OFFSET,0))
+
+			task.wait(COOLDOWN)
+
 			cooldown = false
-			
+
 		end
-		
+
 	end
+
 end)
