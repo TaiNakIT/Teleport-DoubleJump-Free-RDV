@@ -258,12 +258,12 @@ Project này được tạo ra để:
 
 Bạn có thể:
 
-✔ Sử dụng trong game của mình
-✔ Chỉnh sửa source code
-✔ Học và phát triển thêm
+* ✔ Sử dụng trong game của mình
+* ✔ Chỉnh sửa source code
+* ✔ Học và phát triển thêm
 
-Bạn **không nên bán lại nguyên project này** khi chưa chỉnh sửa đáng kể.
+Tuyệt đối **không bán lại nguyên project này** cho người khác ngoài RDV.
 
-**Project:** Teleport-DoubleJump-Free-RDV
-**Author:** Roblox Dev Vietnam
-**Version:** Free Edition
+* **Project:** Teleport-DoubleJump-Free-RDV
+* **Author:** Roblox Dev Vietnam
+* **Version:** Free Edition
