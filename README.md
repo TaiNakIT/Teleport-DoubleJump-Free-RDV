@@ -144,12 +144,12 @@ Phù hợp cho:
 📁 Chuẩn bị (quan trọng)
 
 Nếu muốn dùng Attachment VFX riêng, hãy tạo cấu trúc:
-
+```
 ReplicatedStorage
  └ VFX
      └ TeleportEffect (Attachment)
      └ DoubleJumpEffect (Attachment)
-
+```
 Trong Attachment bạn có thể đặt:
 
 * ParticleEmitter
